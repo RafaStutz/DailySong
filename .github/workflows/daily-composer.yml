@@ -1,0 +1,63 @@
+name: "Daily Jazz Piano Composer"
+
+on:
+  schedule:
+    - cron: '05 03 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date of generation (YYYY-MM-DD)'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Cache uv environment
+        uses: actions/cache@v3
+        with:
+          path: ~/.uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'false'
+
+      - name: Setup uv environment
+        run: |
+          python -m uv create .
+          source .venv/bin/activate
+
+      - name: Install dependencies
+        run: |
+          uv install
+
+      - name: Generate daily song
+        run: |
+          if [[ -n "${{ github.event.inputs.date }}" ]]; then
+            export GEN_DATE=${{ github.event.inputs.date }}
+          else
+            export GEN_DATE=$(date +'%Y-%m-%d')
+          fi
+          uv run python scripts/generate_song.py --date "$GEN_DATE"
+
+      - name: Commit & Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          commit_message: "Daily Jazz Piano — ${{ env.GEN_DATE }}"
+          file_pattern: |
+            music/song_${{ env.GEN_DATE }}_*.mid
+            state.json
