@@ -2,8 +2,7 @@ import json
 import datetime
 import math
 from mido import MidiFile
-from styles.jazz_piano import JazzPianoStyle
-from styles.config import JazzConfig
+from styles import JazzPianoStyle, JazzConfig
 
 try:
     with open('state.json') as f:

@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.log
+*.sqlite3
+
+# Bytecode e logs
+*.log
+*.out
+*.bak
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+
+# pip tools
+pip-wheel-metadata/
+pip-log.txt
+
+# IDEs e ferramentas
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Configurações locais e arquivos ocultos
+.DS_Store
+Thumbs.db
+*.sublime-workspace
+*.sublime-project
+
+# Arquivos temporários de execução
+*.tmp
+*.temp
+
+# Arquivos do sistema ou cache do GitHub
+*.tgz
+*.gz
+*.tar
+*.zip
+*.bak
+*.orig
+
+# Arquivos de lock/venv managers
+poetry.lock
+poetry.toml
+Pipfile.lock
+.uv/
