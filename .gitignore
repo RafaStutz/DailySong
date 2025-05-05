@@ -47,6 +47,7 @@ Thumbs.db
 *.zip
 *.bak
 *.orig
+/bin
 
 # Arquivos de lock/venv managers
 poetry.lock
