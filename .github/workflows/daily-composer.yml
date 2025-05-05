@@ -50,6 +50,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
           git add music/song_${GEN_DATE}_*.mid state.json
           git commit -m "Daily Jazz Piano — ${GEN_DATE}" || echo "Nothing to commit"
           git push origin main
