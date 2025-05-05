@@ -1,5 +1,8 @@
 name: "Daily Jazz Piano Composer"
 
+permissions:
+  contents: write  
+  
 on:
   schedule:
     - cron: '05 03 * * *'
