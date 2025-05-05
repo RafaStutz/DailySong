@@ -44,7 +44,7 @@ jobs:
             export GEN_DATE=$(date +'%Y-%m-%d')
             echo "GEN_DATE=$GEN_DATE" >> $GITHUB_ENV
           fi
-          uv run python scripts/generate_song.py --date "$GEN_DATE"
+          PYTHONPATH=. uv run python scripts/generate_song.py --date "$GEN_DATE"
 
       - name: Commit & Push changes
         run: |
