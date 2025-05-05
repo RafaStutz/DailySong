@@ -1,0 +1,10 @@
+[project]
+name = "daily-jazz-piano"
+version = "0.1.0"
+description = "Automatically generates jazz piano MIDIs daily."
+authors = [{ name = "Rafael Stutz", email = "rafaelstutz14@gmail.com" }]
+requires-python = ">=3.11"
+
+dependencies = [
+    "mido>=1.2.10"
+]
