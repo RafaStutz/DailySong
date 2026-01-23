@@ -13,16 +13,13 @@ on:
         required: false
         default: ''
 
-env:
-  GEN_DATE: ${{ github.event.inputs.date != '' && github.event.inputs.date || '' }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -41,22 +38,69 @@ jobs:
         run: |
           uv sync
 
-      - name: Generate daily song
+      - name: Install audio tools
         run: |
-          if [[ -z "$GEN_DATE" ]]; then
-            export GEN_DATE=$(date +'%Y-%m-%d')
-            echo "GEN_DATE=$GEN_DATE" >> $GITHUB_ENV
-          fi
-          PYTHONPATH=. uv run python scripts/generate_song.py --date "$GEN_DATE"
+          sudo apt-get update
+          sudo apt-get install -y fluidsynth fluid-soundfont-gm ffmpeg
 
-      - name: Commit & Push changes
+      - name: Set run date
+        run: |
+          if [[ -n "${{ github.event.inputs.date }}" ]]; then
+            RUN_DATE="${{ github.event.inputs.date }}"
+          else
+            RUN_DATE="$(date +'%Y-%m-%d')"
+          fi
+          echo "RUN_DATE=$RUN_DATE" >> "$GITHUB_ENV"
+
+      - name: Configure git
         run: |
           git config user.name "RafaStutz"
           git config user.email "rafaelstutz14@gmail.com"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
-          git add music/song_${GEN_DATE}_*.mid state.json
-          git commit -m "Daily Jazz Piano — ${GEN_DATE}" || echo "Nothing to commit"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: log commits
+        run: |
+          set -euo pipefail
+          LOG_COMMITS=$((RANDOM % 3 + 2))
+          for i in $(seq 1 "$LOG_COMMITS"); do
+            PYTHONPATH=. uv run python scripts/update_daily_log.py --output-dir logs --date "$RUN_DATE" --seed $((GITHUB_RUN_ID + i))
+            git add logs
+            git commit -m "Daily log ${RUN_DATE} (#${i})"
+            sleep $((RANDOM % 120 + 30))
+          done
+        env:
+          RUN_DATE: ${{ env.RUN_DATE }}
+
+      - name: Generate daily song
+        run: |
+          PYTHONPATH=. uv run python scripts/generate_song.py --date "$RUN_DATE"
+        env:
+          RUN_DATE: ${{ env.RUN_DATE }}
+
+      - name: Render latest audio
+        run: |
+          set -euo pipefail
+          MID_PATH="$(ls -t "music/song_${RUN_DATE}_"*bpm.mid | head -1)"
+          if [[ -z "$MID_PATH" ]]; then
+            echo "No MIDI file found for ${RUN_DATE}"
+            exit 1
+          fi
+          BASE_NAME="$(basename "$MID_PATH" .mid)"
+          SOUND_FONT="/usr/share/sounds/sf2/FluidR3_GM.sf2"
+          if [[ ! -f "$SOUND_FONT" ]]; then
+            SOUND_FONT="/usr/share/sounds/sf2/FluidR3_GS.sf2"
+          fi
+          fluidsynth -ni "$SOUND_FONT" "$MID_PATH" -F /tmp/latest.wav -r 44100
+          ffmpeg -y -loglevel error -i /tmp/latest.wav "music/${BASE_NAME}.mp3"
+          cp "music/${BASE_NAME}.mp3" "music/latest.mp3"
+
+      - name: Commit & push song artifacts
+        run: |
+          set -euo pipefail
+          git add -A music
+          git commit -m "Daily Jazz Piano — ${RUN_DATE}"
           git push origin main
         env:
-          GEN_DATE: ${{ env.GEN_DATE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_DATE: ${{ env.RUN_DATE }}

@@ -1,6 +1,3 @@
 {
-    "position": 0,
-    "bpm": 120,
-    "style": "jazz_piano",
-    "min_duration_s": 120
-  }
+  "min_duration_s": 120
+}
