@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DailySong Player</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        font-family: Georgia, "Times New Roman", serif;
+        background: #f5f1e8;
+        color: #1b1b1b;
+        margin: 0;
+        padding: 48px 20px;
+      }
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+        background: #fffdf7;
+        border: 1px solid #e6e0d2;
+        border-radius: 14px;
+        padding: 28px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 32px;
+      }
+      p {
+        line-height: 1.6;
+      }
+      .player {
+        margin: 20px 0 12px;
+      }
+      .links a {
+        color: #1b1b1b;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>DailySong</h1>
+      <p>Fresh, short jazz sketches generated daily.</p>
+      <div class="player">
+        <audio controls preload="metadata" src="latest.mp3">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+      <div class="links">
+        <p>
+          Download: <a href="latest.mp3">latest.mp3</a> •
+          <a href="latest.mid">latest.mid</a>
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

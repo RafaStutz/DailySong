@@ -4,10 +4,9 @@ Daily, short jazz piano sketches generated as MIDI.
 
 ## Listen
 
-<audio controls src="music/latest.mp3"></audio>
+Player: `docs/index.html`
 
-If the player doesn't load in your browser, download `music/latest.mp3` or use
-the MIDI file at `music/latest.mid`. The daily workflow keeps these up to date.
+Download `music/latest.mp3` or use the MIDI file at `music/latest.mid`.
 
 ## Note
 

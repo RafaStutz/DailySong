@@ -95,11 +95,14 @@ jobs:
           fluidsynth -ni "$SOUND_FONT" "$MID_PATH" -F /tmp/latest.wav -r 44100
           ffmpeg -y -loglevel error -i /tmp/latest.wav "music/${BASE_NAME}.mp3"
           cp "music/${BASE_NAME}.mp3" "music/latest.mp3"
+          mkdir -p docs
+          cp "music/latest.mp3" "docs/latest.mp3"
+          cp "music/latest.mid" "docs/latest.mid"
 
       - name: Commit & push song artifacts
         run: |
           set -euo pipefail
-          git add -A music
+          git add -A music docs
           git commit -m "Daily Jazz Piano — ${RUN_DATE}"
           git push origin main
         env:
