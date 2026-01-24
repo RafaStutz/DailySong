@@ -2,13 +2,7 @@
 
 Daily, short jazz piano sketches generated as MIDI.
 
-Listen: <a href="https://rafastutz.github.io/DailySong/">Open the player</a>
-
-## Listen
-
-Player: <a href="https://rafastutz.github.io/DailySong/">https://rafastutz.github.io/DailySong/</a>
-
-Download `music/latest.mp3` or use the MIDI file at `music/latest.mid`.
+Listen (if you don't value your time): <a href="https://rafastutz.github.io/DailySong/">Song</a>
 
 ## Note
 
